@@ -1,0 +1,481 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --green: #12976b;
+    --dark-green: #08764f;
+    --navy: #102b43;
+    --text: #536c80;
+    --pale-green: #edf8f2;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--navy);
+    background: white;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.navbar {
+    min-height: 76px;
+    padding: 14px 5.5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    background: #fff;
+    border-bottom: 1px solid #edf1ee;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 25px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--green);
+    color: white;
+    font-size: 25px;
+}
+
+.green {
+    color: var(--green);
+}
+
+nav, .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+nav a, .login {
+    font-size: 14px;
+    font-weight: 600;
+    color: #35495c;
+}
+
+nav a.active {
+    color: var(--green);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--green);
+}
+
+.register {
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: var(--green);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: 30px;
+    padding: 65px 5.7%;
+    background: linear-gradient(115deg, #f2faf6, #e7f6ed);
+    overflow: hidden;
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.eyebrow {
+    display: inline-block;
+    padding: 11px 17px;
+    margin-bottom: 22px;
+    border-radius: 30px;
+    background: #d9f2e5;
+    color: var(--dark-green);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.hero h1 {
+    font-size: clamp(38px, 4.3vw, 66px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: var(--green);
+}
+
+.hero-content > p {
+    max-width: 590px;
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+.primary-button {
+    display: inline-block;
+    background: var(--green);
+    color: white;
+    padding: 15px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.primary-button:hover, .register:hover {
+    background: var(--dark-green);
+    transform: translateY(-2px);
+}
+
+/* Ilustrasi kampus dan deteksi sampah */
+.hero-visual {
+    min-width: 0;
+}
+
+.campus-scene {
+    min-height: 355px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 45% 40% 20% 18%;
+    background: linear-gradient(#dff5e9, #c5e9d3);
+}
+
+.sun {
+    position: absolute;
+    width: 125px;
+    height: 125px;
+    right: 17%;
+    top: 12%;
+    border-radius: 50%;
+    background: #f7fffa;
+}
+
+.cloud {
+    position: absolute;
+    width: 85px;
+    height: 24px;
+    background: white;
+    border-radius: 30px;
+}
+
+.cloud-one {
+    top: 18%;
+    left: 10%;
+}
+
+.cloud-two {
+    top: 10%;
+    right: 12%;
+}
+
+.campus-building {
+    position: absolute;
+    width: 52%;
+    height: 48%;
+    right: 5%;
+    top: 30%;
+}
+
+.roof {
+    height: 30%;
+    background: #8ccbc0;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.building-body {
+    height: 70%;
+    background: #effbf5;
+    border: 5px solid #a3d7c9;
+    display: flex;
+    justify-content: center;
+}
+
+.windows {
+    width: 75%;
+    height: 80%;
+    margin-top: 8px;
+    background: repeating-linear-gradient(
+        90deg,
+        #b5e3d4 0 15px,
+        #effbf5 15px 25px
+    );
+}
+
+.tree {
+    position: absolute;
+    bottom: 7%;
+    font-size: 55px;
+    z-index: 2;
+}
+
+.tree-left {
+    left: 3%;
+}
+
+.tree-right {
+    right: 2%;
+}
+
+.phone {
+    position: absolute;
+    left: 27%;
+    bottom: 6%;
+    height: 76%;
+    width: 26%;
+    min-width: 112px;
+    border: 8px solid #123f3a;
+    border-radius: 27px;
+    background: white;
+    padding: 9px;
+    z-index: 3;
+    box-shadow: 0 12px 24px #3e886333;
+}
+
+.phone-top {
+    height: 13px;
+    width: 45%;
+    margin: -1px auto 12px;
+    background: #123f3a;
+    border-radius: 0 0 10px 10px;
+}
+
+.phone-screen {
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    text-align: center;
+    color: var(--dark-green);
+}
+
+.scan {
+    font-size: 38px;
+    color: #42b99a;
+}
+
+.bottle {
+    font-size: 35px;
+}
+
+.phone-screen small {
+    font-size: 10px;
+}
+
+.recycle {
+    font-size: 28px;
+}
+
+.bin {
+    position: absolute;
+    z-index: 4;
+    right: 15%;
+    bottom: 7%;
+    height: 43%;
+    width: 25%;
+    background: linear-gradient(90deg, #07885d, #13a976);
+    border-radius: 8px 8px 18px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 65px;
+    box-shadow: 0 10px 15px #267f5233;
+}
+
+.bin-lid {
+    position: absolute;
+    top: -9px;
+    left: -7%;
+    width: 114%;
+    height: 18px;
+    border-radius: 7px;
+    background: #087b53;
+}
+
+/* Keunggulan SmartWaste */
+.features-section {
+    padding: 42px 5.8% 55px;
+}
+
+.features-heading {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 45px;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.section-label {
+    color: var(--green);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.features-heading h2 {
+    font-size: 31px;
+    line-height: 1.25;
+    margin-top: 8px;
+}
+
+.features-heading > p {
+    max-width: 470px;
+    color: #71869a;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 35px;
+}
+
+.feature-icon {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: #dcf4e8;
+    color: var(--green);
+    font-size: 28px;
+    margin-bottom: 13px;
+}
+
+.feature h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.feature p {
+    max-width: 240px;
+    font-size: 14px;
+    color: #71869a;
+    line-height: 1.7;
+}
+
+footer {
+    padding: 22px;
+    text-align: center;
+    color: #71869a;
+    background: #f7faf8;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        flex-wrap: wrap;
+    }
+
+    nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        padding-top: 45px;
+    }
+
+    .hero-visual {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .navbar {
+        padding: 15px 5%;
+        gap: 15px;
+    }
+
+    .brand {
+        font-size: 21px;
+    }
+
+    .nav-actions {
+        gap: 12px;
+    }
+
+    .register {
+        padding: 10px 12px;
+    }
+
+    nav {
+        gap: 14px;
+    }
+
+    nav a {
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 38px 6%;
+    }
+
+    .hero h1 {
+        letter-spacing: -1px;
+    }
+
+    .campus-scene {
+        min-height: 285px;
+    }
+
+    .features-section {
+        padding: 35px 6%;
+    }
+
+    .features-heading {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .features-heading h2 {
+        font-size: 27px;
+    }
+
+    .features-grid {
+        gap: 25px 18px;
+    }
+
+    .feature h3 {
+        font-size: 14px;
+    }
+
+    .feature p {
+        font-size: 13px;
+    }
+}

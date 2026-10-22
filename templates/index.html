@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartWaste | Cleaner Campus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="brand">
+        <span class="brand-icon">♻</span>
+        <span>Smart<span class="green">Waste</span></span>
+    </a>
+
+    <nav>
+        <a class="active" href="/">Beranda</a>
+        <a href="#tentang">Tentang</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#cara-kerja">Cara Kerja</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a class="login" href="#masuk">Masuk</a>
+        <a class="register" href="#daftar">Daftar Akun</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="eyebrow">🌿 AI Computer Vision Technology</span>
+
+            <h1>
+                Smart Waste,<br>
+                <span>Cleaner Campus.</span>
+            </h1>
+
+            <p>
+                SmartWaste membantu mengenali dan mengklasifikasikan
+                jenis sampah menggunakan teknologi Artificial Intelligence
+                untuk menciptakan lingkungan kampus Polibatam yang bersih dan hijau.
+            </p>
+
+            <a href="/deteksi" class="primary-button">
+                📷 &nbsp; Mulai Deteksi (Demo AI) &nbsp; →
+            </a>
+        </div>
+
+        <div class="hero-visual">
+            <div class="campus-scene">
+                <div class="sun"></div>
+                <div class="cloud cloud-one"></div>
+                <div class="cloud cloud-two"></div>
+
+                <div class="campus-building">
+                    <div class="roof"></div>
+                    <div class="building-body">
+                        <div class="windows"></div>
+                    </div>
+                </div>
+
+                <div class="tree tree-left">🌳</div>
+                <div class="tree tree-right">🌳</div>
+
+                <div class="phone">
+                    <div class="phone-top"></div>
+                    <div class="phone-screen">
+                        <span class="scan">♻</span>
+                        <div class="bottle">♻️</div>
+                        <strong>Plastik</strong>
+                        <small>85% Confidence</small>
+                        <span class="recycle">♻</span>
+                    </div>
+                </div>
+
+                <div class="bin">
+                    <div class="bin-lid"></div>
+                    <span>♻</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" id="tentang">
+        <div class="features-heading">
+            <div>
+                <span class="section-label">Kenapa SmartWaste?</span>
+                <h2>Solusi Cerdas untuk<br>Kampus yang Lebih Bersih</h2>
+            </div>
+
+            <p id="cara-kerja">
+                Dengan teknologi AI, SmartWaste memudahkan proses
+                pemilahan sampah dan mendukung lingkungan kampus
+                yang lebih sehat dan berkelanjutan.
+            </p>
+        </div>
+
+        <div class="features-grid" id="fitur">
+            <article class="feature">
+                <div class="feature-icon">📷</div>
+                <h3>Deteksi Otomatis</h3>
+                <p>Mengenali jenis sampah secara cepat dan akurat menggunakan AI computer vision.</p>
+            </article>
+
+            <article class="feature">
+                <div class="feature-icon">🌿</div>
+                <h3>Mendukung Lingkungan</h3>
+                <p>Membantu mengurangi sampah anorganik dan menjaga kebersihan kampus.</p>
+            </article>
+
+            <article class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Data Real-Time</h3>
+                <p>Memantau hasil deteksi dan statistik sampah secara langsung.</p>
+            </article>
+
+            <article class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Akses Mudah</h3>
+                <p>Dapat digunakan melalui website dan perangkat mobile.</p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>© 2026 SmartWaste · Politeknik Negeri Batam</p>
+</footer>
+
+</body>
+</html>
