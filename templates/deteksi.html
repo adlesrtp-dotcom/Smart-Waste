@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Sampah | SmartWaste</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="brand">
+        <span class="brand-icon">♻</span>
+        <span>Smart<span class="green">Waste</span></span>
+    </a>
+
+    <nav>
+        <a href="/">Beranda</a>
+        <a href="/#tentang">Tentang</a>
+        <a class="active" href="/deteksi">Deteksi Sampah</a>
+    </nav>
+</header>
+
+<main class="detection-page">
+    <a href="/" class="back-link">← Kembali ke Beranda</a>
+
+    <div class="detection-heading">
+        <span class="section-label">SMARTWASTE AI</span>
+        <h1>Deteksi Jenis Sampah</h1>
+        <p>
+            Unggah foto sampah untuk memulai proses identifikasi
+            dan membantu pemilahan sampah di lingkungan kampus.
+        </p>
+    </div>
+
+    <section class="upload-card">
+        <div class="upload-icon">♻</div>
+        <h2>Unggah Foto Sampah</h2>
+        <p class="upload-description">
+            Pilih gambar sampah dari perangkat kamu.
+            Format JPG, JPEG, PNG, atau WEBP, maksimal 5 MB.
+        </p>
+
+        {% if pesan %}
+            <div class="notice">{{ pesan }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <label class="file-picker" for="gambar">
+                <span>📷</span>
+                <strong>Pilih Foto</strong>
+                <small id="nama-file">Belum ada foto dipilih</small>
+            </label>
+
+            <input
+                type="file"
+                id="gambar"
+                name="gambar"
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                required
+            >
+
+            <img
+                id="preview"
+                class="image-preview"
+                alt="Pratinjau foto sampah"
+            >
+
+            <button type="submit" class="primary-button upload-button">
+                Unggah Foto →
+            </button>
+        </form>
+
+        
+        {% if pesan %}
+            <p class="demo-note">{{ pesan }}</p>
+        {% endif %}
+
+        {% if hasil %}
+            <div class="hasil-deteksi">
+                <h3>Hasil Klasifikasi Sampah</h3>
+
+                <img
+                    src="{{ url_for('uploaded_file', filename=hasil) }}"
+                    alt="Gambar sampah yang dianalisis"
+                    style="max-width: 100%; width: 300px; border-radius: 12px;"
+                >
+
+                <p>
+                    <strong>Jenis sampah:</strong> {{ prediksi }}
+                </p>
+
+                <p>
+                    <strong>Tingkat keyakinan:</strong> {{ confidence }}%
+                </p>
+            </div>
+        {% endif %}
+        </section>
+
+</main>
+
+<footer>
+    <p>© 2026 SmartWaste · Politeknik Negeri Batam</p>
+</footer>
+
+<script>
+    const input = document.getElementById("gambar");
+    const preview = document.getElementById("preview");
+    const namaFile = document.getElementById("nama-file");
+
+    input.addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (file && file.type.startsWith("image/")) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+            namaFile.textContent = file.name;
+        } else {
+            preview.removeAttribute("src");
+            preview.style.display = "none";
+            namaFile.textContent = "Belum ada foto dipilih";
+        }
+    });
+</script>
+
+</body>
+</html>

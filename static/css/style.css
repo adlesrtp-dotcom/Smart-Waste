@@ -479,3 +479,162 @@ footer {
         font-size: 13px;
     }
 }
+
+/* Halaman Deteksi Sampah */
+.detection-page {
+    min-height: 75vh;
+    padding: 35px 20px 65px;
+    background: linear-gradient(135deg, #f0faf5, #ffffff);
+}
+
+.back-link {
+    display: inline-block;
+    margin: 0 auto 28px;
+    color: var(--dark-green);
+    font-weight: 600;
+}
+
+.detection-heading {
+    max-width: 650px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+.detection-heading h1 {
+    margin: 10px 0;
+    font-size: clamp(28px, 4vw, 40px);
+}
+
+.detection-heading p,
+.upload-description {
+    color: var(--text);
+    line-height: 1.7;
+}
+
+.upload-card {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 32px;
+    background: white;
+    border: 1px solid #e0eee5;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px #174c3010;
+    text-align: center;
+}
+
+.upload-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+    background: #dcf4e8;
+    color: var(--green);
+    font-size: 32px;
+}
+
+.upload-card h2 {
+    margin-bottom: 10px;
+}
+
+.upload-description {
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.file-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 25px 15px;
+    border: 2px dashed #a6d6bb;
+    border-radius: 14px;
+    background: #f7fcf9;
+    cursor: pointer;
+}
+
+.file-picker > span {
+    font-size: 30px;
+}
+
+.file-picker strong {
+    color: var(--dark-green);
+}
+
+.file-picker small {
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+.image-preview {
+    display: none;
+    width: 100%;
+    max-width: 360px;
+    max-height: 320px;
+    object-fit: contain;
+    margin: 22px auto;
+    border-radius: 12px;
+}
+
+.upload-button {
+    width: 100%;
+    margin-top: 22px;
+    border: none;
+    cursor: pointer;
+}
+
+.notice {
+    margin-bottom: 18px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #edf8f2;
+    color: var(--dark-green);
+    font-size: 14px;
+}
+
+.result-panel {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e0eee5;
+}
+
+.result-panel h3 {
+    color: var(--dark-green);
+    margin-bottom: 8px;
+}
+
+.result-panel p {
+    color: var(--text);
+    line-height: 1.7;
+}
+
+.result-image {
+    display: block;
+}
+
+.demo-note {
+    padding: 12px;
+    border-radius: 10px;
+    background: #f3f8f4;
+    font-size: 13px;
+}
+
+@media (max-width: 520px) {
+    .detection-page {
+        padding: 25px 16px 45px;
+    }
+
+    .upload-card {
+        padding: 24px 18px;
+    }
+}
