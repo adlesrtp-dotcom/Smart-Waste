@@ -1,11 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartWaste | Cleaner Campus</title>
+    <!-- Tailwind CSS untuk Modal AI Scanner & Animasi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        @keyframes scanLaser {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 95%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
+        }
+        .animate-scan-laser {
+            animation: scanLaser 2s infinite ease-in-out;
+        }
+        @keyframes cornerPulse {
+            0%, 100% { border-color: #10b981; }
+            50% { border-color: #34d399; }
+        }
+        .lens-box {
+            animation: cornerPulse 1.5s infinite;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,14 +36,12 @@
         <span class="brand-icon">♻</span>
         <span>Smart<span class="green">Waste</span></span>
     </a>
-
     <nav>
         <a class="active" href="/">Beranda</a>
         <a href="#tentang">Tentang</a>
         <a href="#fitur">Fitur</a>
         <a href="#cara-kerja">Cara Kerja</a>
     </nav>
-
     <div class="nav-actions">
         <a class="login" href="#masuk">Masuk</a>
         <a class="register" href="#daftar">Daftar Akun</a>
@@ -32,39 +52,34 @@
     <section class="hero">
         <div class="hero-content">
             <span class="eyebrow">🌿 AI Computer Vision Technology</span>
-
             <h1>
                 Smart Waste,<br>
                 <span>Cleaner Campus.</span>
             </h1>
-
             <p>
                 SmartWaste membantu mengenali dan mengklasifikasikan
                 jenis sampah menggunakan teknologi Artificial Intelligence
                 untuk menciptakan lingkungan kampus Polibatam yang bersih dan hijau.
             </p>
-
-            <a href="/deteksi" class="primary-button">
+            <!-- Tombol membuka Modal Scanner AI -->
+            <button onclick="openAiModal()" class="primary-button" style="border: none; cursor: pointer;">
                 📷 &nbsp; Mulai Deteksi (Demo AI) &nbsp; →
-            </a>
+            </button>
         </div>
-
+        
         <div class="hero-visual">
             <div class="campus-scene">
                 <div class="sun"></div>
                 <div class="cloud cloud-one"></div>
                 <div class="cloud cloud-two"></div>
-
                 <div class="campus-building">
                     <div class="roof"></div>
                     <div class="building-body">
                         <div class="windows"></div>
                     </div>
                 </div>
-
                 <div class="tree tree-left">🌳</div>
                 <div class="tree tree-right">🌳</div>
-
                 <div class="phone">
                     <div class="phone-top"></div>
                     <div class="phone-screen">
@@ -75,7 +90,6 @@
                         <span class="recycle">♻</span>
                     </div>
                 </div>
-
                 <div class="bin">
                     <div class="bin-lid"></div>
                     <span>♻</span>
@@ -90,33 +104,28 @@
                 <span class="section-label">Kenapa SmartWaste?</span>
                 <h2>Solusi Cerdas untuk<br>Kampus yang Lebih Bersih</h2>
             </div>
-
             <p id="cara-kerja">
                 Dengan teknologi AI, SmartWaste memudahkan proses
                 pemilahan sampah dan mendukung lingkungan kampus
                 yang lebih sehat dan berkelanjutan.
             </p>
         </div>
-
         <div class="features-grid" id="fitur">
             <article class="feature">
                 <div class="feature-icon">📷</div>
                 <h3>Deteksi Otomatis</h3>
                 <p>Mengenali jenis sampah secara cepat dan akurat menggunakan AI computer vision.</p>
             </article>
-
             <article class="feature">
                 <div class="feature-icon">🌿</div>
                 <h3>Mendukung Lingkungan</h3>
                 <p>Membantu mengurangi sampah anorganik dan menjaga kebersihan kampus.</p>
             </article>
-
             <article class="feature">
                 <div class="feature-icon">📊</div>
                 <h3>Data Real-Time</h3>
                 <p>Memantau hasil deteksi dan statistik sampah secara langsung.</p>
             </article>
-
             <article class="feature">
                 <div class="feature-icon">📱</div>
                 <h3>Akses Mudah</h3>
@@ -126,9 +135,253 @@
     </section>
 </main>
 
+<!-- Modal Scanner AI (Menggunakan Kamera & Upload File dari Laravel) -->
+<div id="aiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-slate-100">
+        
+        <button onclick="closeAiModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl z-20">✕</button>
+        <div class="text-center space-y-2 mb-4">
+            <h3 class="text-2xl font-bold text-slate-800">Scanner AI SmartWaste</h3>
+            <p class="text-sm text-slate-500">Pilih metode pengambilan gambar untuk memindai sampah.</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div id="tabNav" class="flex bg-slate-100 p-1 rounded-xl mb-6">
+            <button id="btnTabUpload" onclick="switchTab('upload')" class="flex-1 py-2 font-semibold text-sm rounded-lg bg-white text-emerald-700 shadow-sm transition">
+                📁 Upload File
+            </button>
+            <button id="btnTabCamera" onclick="switchTab('camera')" class="flex-1 py-2 font-semibold text-sm rounded-lg text-slate-500 hover:text-slate-700 transition">
+                📷 Kamera Langsung
+            </button>
+        </div>
+
+        <!-- Container Input -->
+        <div id="inputContainer">
+            <!-- Area Upload File -->
+            <div id="uploadArea" class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 rounded-2xl p-8 text-center cursor-pointer hover:bg-emerald-50 transition" onclick="document.getElementById('imageInput').click()">
+                <div class="text-4xl mb-2">📸</div>
+                <p class="text-sm font-semibold text-emerald-800">Klik untuk pilih / unggah foto</p>
+                <p class="text-xs text-slate-400 mt-1">Format: JPG, PNG (Maks 5MB)</p>
+                <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="processImage(event)">
+            </div>
+
+            <!-- Area Live Kamera -->
+            <div id="cameraArea" class="hidden space-y-3">
+                <div class="relative rounded-2xl overflow-hidden bg-slate-900 aspect-video flex items-center justify-center border border-slate-200">
+                    <video id="webcamVideo" autoplay playsinline class="w-full h-full object-cover transition-transform duration-300"></video>
+                    <canvas id="webcamCanvas" class="hidden"></canvas>
+                    
+                    <button onclick="switchCameraMode()" class="absolute top-3 right-3 bg-slate-900/60 hover:bg-slate-900/80 text-white backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-lg transition border border-white/20">
+                        🔄 Tukar Kamera
+                    </button>
+                </div>
+                
+                <button onclick="captureFromCamera()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                    <span>📸</span> Ambil Foto & Scan
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Area -->
+        <div id="loadingArea" class="hidden text-center py-6 space-y-3">
+            <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
+                <img id="scanningImage" src="" class="w-full h-full object-cover opacity-60">
+                <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-300 to-emerald-500 shadow-[0_0_15px_#10b981] animate-scan-laser"></div>
+            </div>
+            <p class="text-sm font-semibold text-slate-700 animate-pulse">Memproses Model AI...</p>
+        </div>
+
+        <!-- Result Box Google Lens Style -->
+        <div id="resultArea" class="hidden space-y-4">
+            <div class="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video flex items-center justify-center">
+                <img id="previewImage" src="" class="w-full h-full object-cover">
+                
+                <div class="absolute inset-12 border-2 border-emerald-400 rounded-xl lens-box shadow-[0_0_20px_rgba(16,185,129,0.3)] pointer-events-none transition-all duration-500">
+                    <div class="absolute -top-1 -left-1 w-3 h-3 border-t-4 border-l-4 border-emerald-400"></div>
+                    <div class="absolute -top-1 -right-1 w-3 h-3 border-t-4 border-r-4 border-emerald-400"></div>
+                    <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-4 border-l-4 border-emerald-400"></div>
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-4 border-r-4 border-emerald-400"></div>
+                    
+                    <div class="absolute -top-9 left-2 bg-emerald-600/90 text-white text-xs font-bold px-3 py-1 rounded-lg backdrop-blur-md shadow-lg flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+                        <span id="lensTagText">Memproses...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs uppercase font-bold text-emerald-600 tracking-wider">Hasil AI Detection</span>
+                    <span id="aiResultAccuracy" class="text-xs bg-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold">Akurasi --%</span>
+                </div>
+                <h4 class="text-xl font-extrabold text-slate-800" id="aiResultTitle">Memproses Sampah...</h4>
+                <p class="text-sm text-slate-600" id="aiResultDesc">Deskripsi hasil deteksi sampah.</p>
+            </div>
+            <button onclick="resetModal()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">
+                Coba Pindai Lagi
+            </button>
+        </div>
+    </div>
+</div>
+
 <footer>
     <p>© 2026 SmartWaste · Politeknik Negeri Batam</p>
 </footer>
+
+<!-- Script Webcam & Fetch API Flask -->
+<script>
+    let videoStream = null;
+    let currentFacingMode = "user";
+
+    function openAiModal() {
+        document.getElementById('aiModal').classList.remove('hidden');
+    }
+
+    function closeAiModal() {
+        document.getElementById('aiModal').classList.add('hidden');
+        stopCamera();
+        resetModal();
+    }
+
+    function switchTab(type) {
+        const btnUpload = document.getElementById('btnTabUpload');
+        const btnCamera = document.getElementById('btnTabCamera');
+        const uploadArea = document.getElementById('uploadArea');
+        const cameraArea = document.getElementById('cameraArea');
+
+        if (type === 'upload') {
+            stopCamera();
+            btnUpload.className = "flex-1 py-2 font-semibold text-sm rounded-lg bg-white text-emerald-700 shadow-sm transition";
+            btnCamera.className = "flex-1 py-2 font-semibold text-sm rounded-lg text-slate-500 hover:text-slate-700 transition";
+            uploadArea.classList.remove('hidden');
+            cameraArea.classList.add('hidden');
+        } else {
+            btnCamera.className = "flex-1 py-2 font-semibold text-sm rounded-lg bg-white text-emerald-700 shadow-sm transition";
+            btnUpload.className = "flex-1 py-2 font-semibold text-sm rounded-lg text-slate-500 hover:text-slate-700 transition";
+            uploadArea.classList.add('hidden');
+            cameraArea.classList.remove('hidden');
+            startCamera();
+        }
+    }
+
+    async function startCamera() {
+        stopCamera();
+        const videoElement = document.getElementById('webcamVideo');
+        if (currentFacingMode === "user") {
+            videoElement.style.transform = "scaleX(-1)";
+        } else {
+            videoElement.style.transform = "scaleX(1)";
+        }
+        try {
+            videoStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: currentFacingMode }
+            });
+            videoElement.srcObject = videoStream;
+        } catch (err) {
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = videoStream;
+            } catch (fallbackErr) {
+                alert("Gagal mengakses kamera. Pastikan izin kamera telah diberikan.");
+                switchTab('upload');
+            }
+        }
+    }
+
+    function switchCameraMode() {
+        currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
+        startCamera();
+    }
+
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+    }
+
+    function captureFromCamera() {
+        const video = document.getElementById('webcamVideo');
+        const canvas = document.getElementById('webcamCanvas');
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+
+        if (currentFacingMode === "user") {
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
+        } else {
+            context.setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        document.getElementById('previewImage').src = dataUrl;
+        document.getElementById('scanningImage').src = dataUrl;
+        
+        stopCamera();
+        sendImageToBackend(dataUrl);
+    }
+
+    function processImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                if (document.getElementById('previewImage')) document.getElementById('previewImage').src = dataUrl;
+                if (document.getElementById('scanningImage')) document.getElementById('scanningImage').src = dataUrl;
+                sendImageToBackend(dataUrl);
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function sendImageToBackend(base64Image) {
+        const loadingArea = document.getElementById('loadingArea');
+        const inputContainer = document.getElementById('inputContainer');
+        const resultArea = document.getElementById('resultArea');
+
+        if (loadingArea) loadingArea.classList.remove('hidden');
+        if (inputContainer) inputContainer.classList.add('hidden');
+        if (resultArea) resultArea.classList.add('hidden');
+
+        fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ image: base64Image })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const title = data.class || "Tidak Terdeteksi";
+            const accuracy = `${data.confidence || 0}%`;
+            const desc = `Terdeteksi sebagai sampah ${title}.`;
+
+            if (document.getElementById('aiResultTitle')) document.getElementById('aiResultTitle').innerText = title;
+            if (document.getElementById('aiResultDesc')) document.getElementById('aiResultDesc').innerText = desc;
+            if (document.getElementById('aiResultAccuracy')) document.getElementById('aiResultAccuracy').innerText = `Akurasi ${accuracy}`;
+            if (document.getElementById('lensTagText')) document.getElementById('lensTagText').innerText = `${title} • ${accuracy}`;
+        })
+        .catch(err => {
+            console.error("Scan Error:", err);
+        })
+        .finally(() => {
+            if (loadingArea) loadingArea.classList.add('hidden');
+            if (resultArea) resultArea.classList.remove('hidden');
+        });
+    }
+
+    function resetModal() {
+        document.getElementById('inputContainer').classList.remove('hidden');
+        document.getElementById('tabNav').classList.remove('hidden');
+        document.getElementById('loadingArea').classList.add('hidden');
+        document.getElementById('resultArea').classList.add('hidden');
+        document.getElementById('imageInput').value = '';
+        switchTab('upload');
+    }
+</script>
 
 </body>
 </html>
