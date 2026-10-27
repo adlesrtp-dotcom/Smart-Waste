@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deteksi Sampah | SmartWaste</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -29,24 +30,27 @@
         <span class="section-label">SMARTWASTE AI</span>
         <h1>Deteksi Jenis Sampah</h1>
         <p>
-            Unggah foto sampah untuk memulai proses identifikasi
-            dan membantu pemilahan sampah di lingkungan kampus.
+            Unggah foto sampah untuk mengenali jenisnya dan membantu
+            pemilahan sampah di lingkungan kampus.
         </p>
     </div>
 
     <section class="upload-card">
         <div class="upload-icon">♻</div>
         <h2>Unggah Foto Sampah</h2>
+
         <p class="upload-description">
             Pilih gambar sampah dari perangkat kamu.
             Format JPG, JPEG, PNG, atau WEBP, maksimal 5 MB.
         </p>
 
         {% if pesan %}
-            <div class="notice">{{ pesan }}</div>
+            <div class="notice" role="alert">{{ pesan }}</div>
         {% endif %}
 
-        <form method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" method="POST"
+              enctype="multipart/form-data">
+
             <label class="file-picker" for="gambar">
                 <span>📷</span>
                 <strong>Pilih Foto</strong>
@@ -65,39 +69,107 @@
                 id="preview"
                 class="image-preview"
                 alt="Pratinjau foto sampah"
+                style="display:none;"
             >
 
-            <button type="submit" class="primary-button upload-button">
+            <p id="errorFile"
+               role="alert"
+               style="display:none; color:#dc2626; margin-top:10px;">
+            </p>
+
+            <button id="submitButton"
+                    type="submit"
+                    class="primary-button upload-button">
                 Unggah Foto →
             </button>
+
+            <p id="loadingMessage"
+               role="status"
+               style="display:none; margin-top:12px;">
+                ♻ Sedang menganalisis gambar dengan AI...
+            </p>
         </form>
 
-        
-        {% if pesan %}
-            <p class="demo-note">{{ pesan }}</p>
-        {% endif %}
-
         {% if hasil %}
-            <div class="hasil-deteksi">
+            <div class="hasil-deteksi" aria-live="polite">
                 <h3>Hasil Klasifikasi Sampah</h3>
 
                 <img
                     src="{{ url_for('uploaded_file', filename=hasil) }}"
                     alt="Gambar sampah yang dianalisis"
-                    style="max-width: 100%; width: 300px; border-radius: 12px;"
+                    style="max-width:100%; width:300px;
+                           border-radius:12px;"
                 >
 
                 <p>
-                    <strong>Jenis sampah:</strong> {{ prediksi }}
+                    <strong>Jenis sampah:</strong>
+                    {{ prediksi }}
                 </p>
 
                 <p>
-                    <strong>Tingkat keyakinan:</strong> {{ confidence }}%
+                    <strong>Confidence model:</strong>
+                    {{ confidence }}%
                 </p>
+
+                {% if prediksi == 'Kardus' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Pisahkan kardus dari sampah lain dan pastikan
+                        kardus kering sebelum dimasukkan ke tempat
+                        pengumpulan kertas atau kardus daur ulang.
+                    </p>
+                {% elif prediksi == 'Kertas' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Kumpulkan kertas secara terpisah dan jaga agar
+                        tetap kering untuk memudahkan proses daur ulang.
+                    </p>
+                {% elif prediksi == 'Plastik' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Kosongkan dan bersihkan kemasan jika memungkinkan,
+                        lalu pisahkan ke tempat pengumpulan plastik daur ulang.
+                    </p>
+                {% elif prediksi == 'Logam' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Pisahkan kaleng atau benda logam dan kumpulkan
+                        pada tempat daur ulang logam yang sesuai.
+                    </p>
+                {% elif prediksi == 'Kaca' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Pisahkan kaca dengan hati-hati. Jangan menyentuh
+                        pecahan kaca secara langsung; gunakan wadah aman
+                        dan ikuti aturan pengelolaan sampah kampus.
+                    </p>
+                {% elif prediksi == 'Sampah Lainnya' %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Periksa kembali jenis sampah dan ikuti petunjuk
+                        pemilahan yang berlaku di lingkungan kampus.
+                    </p>
+                {% else %}
+                    <p>
+                        <strong>Saran:</strong>
+                        Periksa kategori sampah dan sesuaikan dengan
+                        fasilitas pemilahan yang tersedia di kampus.
+                    </p>
+                {% endif %}
+
+                <p style="font-size:12px; color:#64748b;">
+                    Confidence merupakan tingkat keyakinan prediksi
+                    model, bukan jaminan bahwa hasil selalu benar.
+                </p>
+
+                <button type="button"
+                        class="primary-button upload-button"
+                        onclick="window.location.href='/deteksi'">
+                    Deteksi Gambar Lain →
+                </button>
             </div>
         {% endif %}
-        </section>
-
+    </section>
 </main>
 
 <footer>
@@ -108,19 +180,93 @@
     const input = document.getElementById("gambar");
     const preview = document.getElementById("preview");
     const namaFile = document.getElementById("nama-file");
+    const errorFile = document.getElementById("errorFile");
+    const form = document.getElementById("uploadForm");
+    const submitButton = document.getElementById("submitButton");
+    const loadingMessage = document.getElementById("loadingMessage");
+
+    const MAX_SIZE = 5 * 1024 * 1024;
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    let previewUrl = null;
+    let fileValid = false;
 
     input.addEventListener("change", function () {
         const file = this.files[0];
 
-        if (file && file.type.startsWith("image/")) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = "block";
-            namaFile.textContent = file.name;
-        } else {
-            preview.removeAttribute("src");
-            preview.style.display = "none";
-            namaFile.textContent = "Belum ada foto dipilih";
+        errorFile.style.display = "none";
+        errorFile.textContent = "";
+        fileValid = false;
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            previewUrl = null;
         }
+
+        preview.removeAttribute("src");
+        preview.style.display = "none";
+
+        if (!file) {
+            namaFile.textContent = "Belum ada foto dipilih";
+            return;
+        }
+
+        if (!allowedTypes.includes(file.type)) {
+            showError("Format harus JPG, JPEG, PNG, atau WEBP.");
+            input.value = "";
+            namaFile.textContent = "Belum ada foto dipilih";
+            return;
+        }
+
+        if (file.size > MAX_SIZE) {
+            showError("Ukuran gambar maksimal 5 MB.");
+            input.value = "";
+            namaFile.textContent = "Belum ada foto dipilih";
+            return;
+        }
+
+        fileValid = true;
+        namaFile.textContent = file.name;
+
+        previewUrl = URL.createObjectURL(file);
+        preview.src = previewUrl;
+        preview.style.display = "block";
+    });
+
+    function showError(message) {
+        errorFile.textContent = message;
+        errorFile.style.display = "block";
+    }
+
+    form.addEventListener("submit", function (event) {
+        const file = input.files[0];
+
+        if (!file || !fileValid) {
+            event.preventDefault();
+            showError("Silakan pilih gambar yang valid terlebih dahulu.");
+            return;
+        }
+
+        if (file.size > MAX_SIZE ||
+            !allowedTypes.includes(file.type)) {
+            event.preventDefault();
+            showError("Periksa kembali format dan ukuran gambar.");
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Sedang Memproses...";
+        loadingMessage.style.display = "block";
+    });
+
+    window.addEventListener("pageshow", function () {
+        submitButton.disabled = false;
+        submitButton.textContent = "Unggah Foto →";
+        loadingMessage.style.display = "none";
     });
 </script>
 

@@ -25,7 +25,7 @@ MODEL_PATHS = [
     os.path.join(app.root_path, "best.pt"),
     os.path.join(
         app.root_path,
-        "runs", "classify", "runs", "smartwaste",
+        "runs", "smartwaste",
         "klasifikasi_sampah", "weights", "best.pt"
     ),
 ]
