@@ -1,18 +1,97 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deteksi Sampah | SmartWaste</title>
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .sample-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e0eee5;
+            text-align: left;
+        }
+        .sample-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .sample-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 14px;
+        }
+        .sample-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+            gap: 10px;
+        }
+        .sample-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .sample-card:hover {
+            border-color: #10b981;
+            background: #ecfdf5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .sample-thumb {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: #e2e8f0;
+        }
+        .sample-card-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .sample-card-badge {
+            font-size: 10px;
+            color: #059669;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .icon-svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 
 <header class="navbar">
     <a href="/" class="brand">
-        <span class="brand-icon">♻</span>
+        <span class="brand-icon">
+            <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"></path>
+                <path d="M11 19h8.2a1.8 1.8 0 0 0 1.57-.88 1.8 1.8 0 0 0 .004-1.78L17 10"></path>
+                <path d="m16 4.8-2.1 3.7a1.8 1.8 0 0 1-1.56.9 1.8 1.8 0 0 1-1.56-.9L8.7 4.8a1.8 1.8 0 0 1 .01-1.8 1.8 1.8 0 0 1 1.56-.9h4.46a1.8 1.8 0 0 1 1.56.9 1.8 1.8 0 0 1 .01 1.8z"></path>
+            </svg>
+        </span>
         <span>Smart<span class="green">Waste</span></span>
     </a>
 
@@ -24,35 +103,50 @@
 </header>
 
 <main class="detection-page">
-    <a href="/" class="back-link">← Kembali ke Beranda</a>
+    <a href="/" class="back-link">
+        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Kembali ke Beranda
+    </a>
 
     <div class="detection-heading">
         <span class="section-label">SMARTWASTE AI</span>
         <h1>Deteksi Jenis Sampah</h1>
         <p>
-            Unggah foto sampah untuk mengenali jenisnya dan membantu
-            pemilahan sampah di lingkungan kampus.
+            Unggah foto sampah atau gunakan data sampel dataset untuk mengenali
+            jenisnya dan membantu pemilahan sampah di lingkungan kampus.
         </p>
     </div>
 
     <section class="upload-card">
-        <div class="upload-icon">♻</div>
+        <div class="upload-icon">
+            <svg class="icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+        </div>
         <h2>Unggah Foto Sampah</h2>
 
         <p class="upload-description">
-            Pilih gambar sampah dari perangkat kamu.
-            Format JPG, JPEG, PNG, atau WEBP, maksimal 5 MB.
+            Pilih gambar sampah dari perangkat kamu. Format JPG, JPEG, PNG, atau WEBP, maksimal 5 MB.
         </p>
 
         {% if pesan %}
             <div class="notice" role="alert">{{ pesan }}</div>
         {% endif %}
 
-        <form id="uploadForm" method="POST"
-              enctype="multipart/form-data">
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
 
             <label class="file-picker" for="gambar">
-                <span>📷</span>
+                <span style="display:inline-block; margin-bottom:6px; color:#12976b;">
+                    <svg class="icon-svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                        <circle cx="12" cy="13" r="3"/>
+                    </svg>
+                </span>
                 <strong>Pilih Foto</strong>
                 <small id="nama-file">Belum ada foto dipilih</small>
             </label>
@@ -80,25 +174,47 @@
             <button id="submitButton"
                     type="submit"
                     class="primary-button upload-button">
-                Unggah Foto →
+                <span>Unggah Foto</span>
+                <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
             </button>
 
             <p id="loadingMessage"
                role="status"
-               style="display:none; margin-top:12px;">
-                ♻ Sedang menganalisis gambar dengan AI...
+               style="display:none; margin-top:12px; color:#08764f; font-weight:600;">
+                <svg class="icon-svg loading-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+                </svg>
+                Sedang menganalisis gambar dengan AI...
             </p>
         </form>
+
+        <!-- Section Coba dengan Data Sampel Dataset -->
+        <div class="sample-section">
+            <div class="sample-title">Atau Uji dengan Data Sampel Dataset:</div>
+            <div class="sample-desc">Pilih salah satu contoh objek sampah yang telah disediakan:</div>
+            <div class="sample-grid">
+                {% for item in samples %}
+                <a href="/deteksi?sample={{ item.file_name }}" class="sample-card">
+                    <img src="{{ url_for('static', filename='samples/' + item.file_name) }}" alt="{{ item.label }}" class="sample-thumb">
+                    <span class="sample-card-label">{{ item.label }}</span>
+                    <span class="sample-card-badge">Uji AI</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
 
         {% if hasil %}
             <div class="hasil-deteksi" aria-live="polite">
                 <h3>Hasil Klasifikasi Sampah</h3>
 
                 <img
-                    src="{{ url_for('uploaded_file', filename=hasil) }}"
+                    src="{% if hasil.startswith('/') %}{{ hasil }}{% else %}{{ url_for('uploaded_file', filename=hasil) }}{% endif %}"
                     alt="Gambar sampah yang dianalisis"
-                    style="max-width:100%; width:300px;
-                           border-radius:12px;"
+                    style="max-width:100%; width:300px; border-radius:12px; margin: 12px auto; display:block;"
                 >
 
                 <p>
@@ -111,61 +227,39 @@
                     {{ confidence }}%
                 </p>
 
-                {% if prediksi == 'Kardus' %}
+                {% if saran %}
                     <p>
-                        <strong>Saran:</strong>
-                        Pisahkan kardus dari sampah lain dan pastikan
-                        kardus kering sebelum dimasukkan ke tempat
-                        pengumpulan kertas atau kardus daur ulang.
-                    </p>
-                {% elif prediksi == 'Kertas' %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Kumpulkan kertas secara terpisah dan jaga agar
-                        tetap kering untuk memudahkan proses daur ulang.
-                    </p>
-                {% elif prediksi == 'Plastik' %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Kosongkan dan bersihkan kemasan jika memungkinkan,
-                        lalu pisahkan ke tempat pengumpulan plastik daur ulang.
-                    </p>
-                {% elif prediksi == 'Logam' %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Pisahkan kaleng atau benda logam dan kumpulkan
-                        pada tempat daur ulang logam yang sesuai.
-                    </p>
-                {% elif prediksi == 'Kaca' %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Pisahkan kaca dengan hati-hati. Jangan menyentuh
-                        pecahan kaca secara langsung; gunakan wadah aman
-                        dan ikuti aturan pengelolaan sampah kampus.
-                    </p>
-                {% elif prediksi == 'Sampah Lainnya' %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Periksa kembali jenis sampah dan ikuti petunjuk
-                        pemilahan yang berlaku di lingkungan kampus.
+                        <strong>Saran Pengelolaan:</strong>
+                        {{ saran }}
                     </p>
                 {% else %}
-                    <p>
-                        <strong>Saran:</strong>
-                        Periksa kategori sampah dan sesuaikan dengan
-                        fasilitas pemilahan yang tersedia di kampus.
-                    </p>
+                    {% if prediksi == 'Kardus' %}
+                        <p><strong>Saran:</strong> Pisahkan kardus dari sampah basah dan lipat rapi sebelum dimasukkan ke tempat daur ulang kertas.</p>
+                    {% elif prediksi == 'Kertas' %}
+                        <p><strong>Saran:</strong> Kumpulkan kertas secara terpisah dan jaga agar tetap kering untuk memudahkan proses daur ulang.</p>
+                    {% elif prediksi == 'Plastik' %}
+                        <p><strong>Saran:</strong> Kosongkan dan bilas kemasan jika memungkinkan, lalu pisahkan ke tempat sampah plastik anorganik.</p>
+                    {% elif prediksi == 'Logam' %}
+                        <p><strong>Saran:</strong> Pisahkan kaleng atau benda logam dan kumpulkan pada tempat daur ulang logam yang sesuai.</p>
+                    {% elif prediksi == 'Kaca' %}
+                        <p><strong>Saran:</strong> Pisahkan kaca dengan hati-hati. Gunakan wadah aman dan jangan menyentuh pecahan kaca secara langsung.</p>
+                    {% else %}
+                        <p><strong>Saran:</strong> Periksa kembali kategori sampah dan ikuti petunjuk fasilitas pemilahan kampus.</p>
+                    {% endif %}
                 {% endif %}
 
-                <p style="font-size:12px; color:#64748b;">
-                    Confidence merupakan tingkat keyakinan prediksi
-                    model, bukan jaminan bahwa hasil selalu benar.
+                <p style="font-size:12px; color:#64748b; margin-top:8px;">
+                    Confidence merupakan tingkat keyakinan prediksi model AI.
                 </p>
 
                 <button type="button"
                         class="primary-button upload-button"
                         onclick="window.location.href='/deteksi'">
-                    Deteksi Gambar Lain →
+                    <span>Deteksi Gambar Lain</span>
+                    <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                 </button>
             </div>
         {% endif %}
@@ -251,21 +345,19 @@
             return;
         }
 
-        if (file.size > MAX_SIZE ||
-            !allowedTypes.includes(file.type)) {
+        if (file.size > MAX_SIZE || !allowedTypes.includes(file.type)) {
             event.preventDefault();
             showError("Periksa kembali format dan ukuran gambar.");
             return;
         }
 
         submitButton.disabled = true;
-        submitButton.textContent = "Sedang Memproses...";
+        submitButton.innerHTML = "<span>Sedang Memproses...</span>";
         loadingMessage.style.display = "block";
     });
 
     window.addEventListener("pageshow", function () {
         submitButton.disabled = false;
-        submitButton.textContent = "Unggah Foto →";
         loadingMessage.style.display = "none";
     });
 </script>
